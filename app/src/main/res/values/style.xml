@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dialog_no_border">
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:windowBackground">#AA000000</item>
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/jump_in</item>
+        <item name="android:windowExitAnimation">@anim/jump_out</item>
+    </style>
+
+</resources>
