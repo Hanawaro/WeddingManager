@@ -83,7 +83,7 @@ class Menu : Fragment(R.layout.fragment_menu) {
             R.id.action_components -> {
                 val current: Calendar = Calendar.getInstance().apply {
                     time = Date(System.currentTimeMillis())
-                    set(Calendar.HOUR, -12)
+                    set(Calendar.HOUR, 3)
                     set(Calendar.MINUTE, 0)
                     set(Calendar.SECOND, 0)
                 }
@@ -92,7 +92,7 @@ class Menu : Fragment(R.layout.fragment_menu) {
                 val image = if (current.get(Calendar.DAY_OF_MONTH) % 2 == 0) {
                     val bitmap = BitmapFactory.decodeResource(context?.resources, R.drawable.profile);
                     val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
                     stream.toByteArray()
                 } else {
                     ByteArray(0)

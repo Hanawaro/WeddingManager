@@ -1,5 +1,6 @@
 package com.weddingManager.weddingmanager.util
 
+import android.util.Log
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.util.*
 
@@ -33,5 +34,6 @@ class TimeRange {
         set(Calendar.HOUR, 3)
         set(Calendar.MINUTE, 0)
         set(Calendar.SECOND, 0)
+        Log.d("LOGGING_DATE", "${time.time}")
     }
 }
