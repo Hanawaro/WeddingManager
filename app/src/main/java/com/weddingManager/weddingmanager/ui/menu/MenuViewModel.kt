@@ -3,7 +3,7 @@ package com.weddingManager.weddingmanager.ui.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.weddingManager.database.daos.WeddingDAO
-import com.weddingManager.weddingmanager.ui.menu.components.calendarBottomSheet.TimeRange
+import com.weddingManager.weddingmanager.util.TimeRange
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 

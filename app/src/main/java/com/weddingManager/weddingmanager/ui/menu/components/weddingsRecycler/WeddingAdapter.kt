@@ -85,10 +85,9 @@ class WeddingAdapter(private val vibrator: Vibrator?, private val fragmentManage
                     isVerticallyScrolling = false
 
                     if (wedding.photo.isNotEmpty()) {
-                        imageDialog.show(fragmentManager, "")
-                        imageDialog.dialog?.findViewById<ImageView>(R.id.show_image_view)?.setImageBitmap(
-                                BitmapFactory.decodeByteArray(wedding.photo, 0, wedding.photo.size))
                         com.weddingManager.weddingmanager.util.Vibrator.vibrate(vibrator, 70)
+                        imageDialog.bitmap = BitmapFactory.decodeByteArray(wedding.photo, 0, wedding.photo.size)
+                        imageDialog.show(fragmentManager, "")
 
                     } else {
                         val timeAnimation = 300L

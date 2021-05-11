@@ -1,7 +1,6 @@
-package com.weddingManager.weddingmanager.ui.menu.components.calendarBottomSheet
+package com.weddingManager.weddingmanager.util
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.weddingManager.weddingmanager.util.asCalendar
 import java.util.*
 
 class TimeRange {

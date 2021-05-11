@@ -17,7 +17,7 @@ import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.repository.Repository
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.menu.components.calendarBottomSheet.CalendarBottomSheet
-import com.weddingManager.weddingmanager.ui.menu.components.calendarBottomSheet.TimeRange
+import com.weddingManager.weddingmanager.util.TimeRange
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.ImageDialog
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingRecycler
 import com.weddingManager.weddingmanager.util.onQueryTextChanged

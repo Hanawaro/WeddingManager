@@ -14,24 +14,24 @@ data class WeddingModel(
     // ============= INFO ==============
 
     @ColumnInfo(name = "husbandName")
-    val husbandName: String,
+    var husbandName: String,
 
     @ColumnInfo(name = "wifeName")
-    val wifeName: String,
+    var wifeName: String,
 
     @ColumnInfo(name = "photo", typeAffinity = ColumnInfo.BLOB)
-    val photo: ByteArray,
+    var photo: ByteArray = ByteArray(0),
 
     @ColumnInfo(name = "date")
-    val date: Long,
+    var date: Long = Long.MAX_VALUE,
 
     // =========== COMPONENTS ===========
 
     @ColumnInfo(name = "placeID")
-    val place: Int,
+    var place: Int = -1,
 
     @ColumnInfo(name = "photographerID")
-    val photographer: Int,
+    var photographer: Int = -1,
 
     // =============== ID ===============
 

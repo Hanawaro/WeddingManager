@@ -37,6 +37,11 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_weddingEditor_to_menu"
+            app:destination="@id/menu"
+            app:popUpTo="@id/menu"
+            app:popUpToInclusive="true" />
         <argument
             android:name="wedding"
             app:argType="com.weddingManager.database.models.WeddingModel"

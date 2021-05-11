@@ -11,7 +11,7 @@ import com.weddingManager.database.models.ComponentModel
 import com.weddingManager.database.models.DateModel
 import com.weddingManager.database.models.WeddingModel
 
-@Database(entities = [WeddingModel::class, ComponentModel::class, DateModel::class], version = 1, exportSchema = false)
+@Database(entities = [WeddingModel::class, ComponentModel::class, DateModel::class], version = 2, exportSchema = false)
 abstract class Database : RoomDatabase() {
 
     abstract fun getWeddingDAO(): WeddingDAO
