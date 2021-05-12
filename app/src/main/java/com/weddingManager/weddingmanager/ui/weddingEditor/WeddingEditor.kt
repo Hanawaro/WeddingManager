@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.repository.Repository
 import com.weddingManager.weddingmanager.R
+import com.weddingManager.weddingmanager.ui.weddingEditor.components.imageController.ImageController
 import kotlinx.android.synthetic.main.fragment_wedding_editor.*
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -35,14 +36,13 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
     private val args: WeddingEditorArgs by navArgs()
 
     private lateinit var wedding: WeddingModel
-    lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var imageController: ImageController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
         activity?.title = "Свадебный редактор"
-
 
         if (args.wedding != null) {
 
@@ -78,25 +78,12 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
             )
         }
 
-        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
+        val register = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            wedding.photo = imageController.callBack(requireContext(), requireView(), result) ?: ByteArray(0)
+        }
 
-                val inputStream = requireContext().contentResolver.openInputStream(data?.data!!)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
-
-                val byteArray = stream.toByteArray()
-
-                if (byteArray.size < 1024 * 1024) {
-                    wedding.photo = byteArray
-                    wedding_editor_image.setImageBitmap(bitmap)
-                } else {
-                    Snackbar.make(requireView(), "Too large image", Snackbar.LENGTH_LONG).show()
-                }
-            }
+        imageController = ImageController(wedding_editor_image, register).apply {
+            setListeners(wedding, parentFragmentManager)
         }
 
         fab_save_wedding_editor.setOnClickListener {
@@ -129,24 +116,6 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
                     OvershootInterpolator()
                 ).start()
             }.start()
-        }
-
-        wedding_editor_image.setOnClickListener {
-
-            val duration = 300L
-            val scale = 1.1f
-
-            wedding_editor_image.animate().setDuration(duration / 2).scaleX(scale).scaleY(scale).withEndAction {
-                wedding_editor_image.animate().setDuration(duration / 2).scaleX(1f).scaleY(1f).setInterpolator(
-                    OvershootInterpolator()
-                ).start()
-            }.start()
-
-            val intent = Intent().apply {
-                type = "image/jpeg"
-                action = Intent.ACTION_GET_CONTENT
-            }
-            resultLauncher.launch(Intent.createChooser(intent, "choose photo"))
         }
 
         // set recycle view

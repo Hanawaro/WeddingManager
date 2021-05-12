@@ -109,8 +109,6 @@ class WeddingAdapter(private val vibrator: Vibrator?, private val fragmentManage
                         com.weddingManager.weddingmanager.util.Vibrator.vibrate(vibrator, 50)
                     }
 
-
-
                     return@setOnLongClickListener true
                 }
 
