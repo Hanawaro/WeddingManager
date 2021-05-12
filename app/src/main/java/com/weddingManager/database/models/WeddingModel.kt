@@ -23,15 +23,15 @@ data class WeddingModel(
     var photo: ByteArray = ByteArray(0),
 
     @ColumnInfo(name = "date")
-    var date: Long = Long.MAX_VALUE,
+    var date: Long = noDateValue,
 
     // =========== COMPONENTS ===========
 
     @ColumnInfo(name = "placeID")
-    var place: Int = -1,
+    var place: Int = 0,
 
     @ColumnInfo(name = "photographerID")
-    var photographer: Int = -1,
+    var photographer: Int = 0,
 
     // =============== ID ===============
 
@@ -40,6 +40,10 @@ data class WeddingModel(
     val id: Int = 0
 
 ) : Parcelable {
+
+    companion object {
+        val noDateValue = Long.MAX_VALUE / 1000
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

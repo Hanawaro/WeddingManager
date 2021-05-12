@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WeddingDAO {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(wedding: WeddingModel)
 
     @Update
@@ -19,9 +19,12 @@ interface WeddingDAO {
     suspend fun delete(wedding: WeddingModel)
 
     @Query("DELETE FROM weddings")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM weddings WHERE (husbandName LIKE '%' || :regex || '%' OR wifeName LIKE '%' || :regex || '%') AND date >= :from AND date <= :to  ORDER BY date DESC, id DESC")
     fun getAll(regex: String = "", from: Long = Long.MIN_VALUE, to: Long = Long.MAX_VALUE) : Flow<List<WeddingModel>>
+
+    @Query("SELECT * FROM weddings WHERE id=:id")
+    fun getAll(id: Int): Flow<List<WeddingModel>>
 
 }

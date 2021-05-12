@@ -3,11 +3,9 @@ package com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.Vibrator
-import android.transition.Visibility
 import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
-import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
@@ -16,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.menu.MenuDirections
+import com.weddingManager.weddingmanager.util.ImageDialog
 import kotlinx.android.synthetic.main.fragment_wedding_editor.view.*
 import kotlinx.android.synthetic.main.item_wedding.view.*
 import java.text.SimpleDateFormat
@@ -35,7 +34,6 @@ class WeddingAdapter(private val vibrator: Vibrator?, private val fragmentManage
 
     override fun onBindViewHolder(holder: WeddingViewHolder, position: Int) {
         val currentItem = getItem(position)
-
         holder.bind(currentItem)
     }
 
@@ -48,7 +46,7 @@ class WeddingAdapter(private val vibrator: Vibrator?, private val fragmentManage
                 item_husband_name.text = wedding.husbandName
                 item_wife_name.text = wedding.wifeName
 
-                if (wedding.date == Long.MAX_VALUE) {
+                if (wedding.date == WeddingModel.noDateValue) {
                     item_date.text = "дата не выбрана"
                 } else {
                     val text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(wedding.date * 1000)) +

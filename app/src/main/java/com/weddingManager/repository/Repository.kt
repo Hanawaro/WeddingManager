@@ -72,6 +72,13 @@ object Repository {
             return database!!.getWeddingDAO().getAll(regex).asLiveData()
         }
 
+        fun contains(context: Context, id: Int): Boolean {
+            database = getDatabase(context)
+            return database!!.getWeddingDAO().getAll(id).asLiveData().value?.apply {
+                isNotEmpty()
+            }.orEmpty().isNotEmpty()
+        }
+
     }
 
     object Component {
@@ -97,9 +104,31 @@ object Repository {
             }
         }
 
+        fun deleteAll(context: Context) {
+            database = getDatabase(context)
+            CoroutineScope(IO).launch {
+                database!!.getComponentDAO().deleteAll()
+            }
+        }
+
         fun getAll(context: Context, type: ComponentModel.Type): LiveData<List<ComponentModel>> {
             database = getDatabase(context)
             return database!!.getComponentDAO().getAll(type.type)
+        }
+
+        fun get(context: Context, id: Int): LiveData<ComponentModel> {
+            database = getDatabase(context)
+            return database!!.getComponentDAO().get(id)
+        }
+
+        fun getAll(context: Context, type: String): LiveData<List<ComponentModel>> {
+            database = getDatabase(context)
+            return database!!.getComponentDAO().getAll(type)
+        }
+
+        fun getAll(context: Context): LiveData<List<String>> {
+            database = getDatabase(context)
+            return database!!.getComponentDAO().getAll()
         }
 
     }

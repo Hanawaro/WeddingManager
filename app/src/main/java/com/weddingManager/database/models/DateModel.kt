@@ -16,7 +16,6 @@ data class DateModel(
     @ColumnInfo(name = "date")
     val date: Long,
 
-
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0

@@ -15,8 +15,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import com.weddingManager.database.models.WeddingModel
-import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.ImageDialog
+import com.weddingManager.weddingmanager.util.ImageDialog
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingAdapter
+import com.weddingManager.weddingmanager.ui.weddingEditor.components.componentsRecycler.ComponentAdapter
 import kotlinx.android.synthetic.main.fragment_wedding_editor.*
 import java.io.ByteArrayOutputStream
 import kotlin.math.abs
@@ -49,7 +50,7 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
                         dialog.dismiss()
                     }
 
-                    WeddingAdapter.isVerticallyScrolling = true
+                    // TODO implement fix scrolling (true)
                     isLongClick = false
                 }
             }
@@ -61,7 +62,7 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
             isLongClick = true
             // show image here
 
-            WeddingAdapter.isVerticallyScrolling = false
+            // TODO implement fix scrolling (false)
 
             if (wedding.photo.isNotEmpty()) {
                 dialog.bitmap = BitmapFactory.decodeByteArray(wedding.photo, 0, wedding.photo.size)

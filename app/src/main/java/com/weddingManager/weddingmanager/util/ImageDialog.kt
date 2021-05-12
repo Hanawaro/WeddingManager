@@ -1,4 +1,4 @@
-package com.weddingManager.weddingmanager.ui.weddingEditor.components.imageController.imageDialog
+package com.weddingManager.weddingmanager.util
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingAdapter
 
-class ImageDialog : DialogFragment() {
+class ImageDialog() : DialogFragment() {
 
     var isFixed = false
         private set

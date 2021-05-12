@@ -3,12 +3,10 @@ package com.weddingManager.weddingmanager.ui.menu
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +16,6 @@ import com.weddingManager.repository.Repository
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.menu.components.calendarBottomSheet.CalendarBottomSheet
 import com.weddingManager.weddingmanager.util.TimeRange
-import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.ImageDialog
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingRecycler
 import com.weddingManager.weddingmanager.util.onQueryTextChanged
 import kotlinx.android.synthetic.main.fragment_menu.*

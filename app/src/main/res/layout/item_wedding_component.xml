@@ -17,25 +17,37 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/component"
+        android:id="@+id/wedding_component_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wedding_component_title">
+
+        <TextView
+            android:id="@+id/wedding_component_hello_message"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/wedding_component_image" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wedding_component_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/profile"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/ic_baseline_add"
+            app:layout_constraintLeft_toRightOf="@+id/wedding_component_hello_message"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
+            android:id="@+id/wedding_component_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="component name"
             app:layout_constraintLeft_toRightOf="@id/wedding_component_image"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"  />
 

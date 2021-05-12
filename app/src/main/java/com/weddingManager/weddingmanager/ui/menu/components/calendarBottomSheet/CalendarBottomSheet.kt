@@ -22,7 +22,7 @@ class CalendarBottomSheet(context: Context, searchQuery: MutableStateFlow<MenuVi
 
     private val controller = CalendarController(searchQuery)
 
-    val timeRange = TimeRange()
+    private val timeRange = TimeRange()
     private val currentDayDecorator = CurrentDayDecorator(timeRange.current.asCalendarDay())
     private val activeDayDecorator = ActiveDayDecorator()
     private val notActiveDayDecorator = NotActiveDayDecorator()

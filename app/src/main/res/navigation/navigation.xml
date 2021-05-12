@@ -33,20 +33,23 @@
             app:argType="com.weddingManager.database.models.WeddingModel"
             app:nullable="true" />
         <action
-            android:id="@+id/action_weddingEditor_to_photographerList"
+            android:id="@+id/action_weddingEditor_to_componentList"
             app:destination="@id/componentList" />
     </fragment>
     <fragment
         android:id="@+id/componentList"
-        android:name="com.weddingManager.weddingmanager.ui.fragments.PhotographerList"
+        android:name="com.weddingManager.weddingmanager.ui.componentList.ComponentList"
         android:label="fragment_component_list"
         tools:layout="@layout/fragment_component_list" >
         <action
-            android:id="@+id/action_photographerList_to_photographerEditor"
+            android:id="@+id/action_componentList_to_componentEditor"
             app:destination="@id/componentEditor" />
         <action
-            android:id="@+id/action_photographerList_to_weddingEditor"
+            android:id="@+id/action_componentList_to_weddingEditor"
             app:destination="@id/weddingEditor" />
+        <argument
+            android:name="typeName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/componentEditor"
@@ -54,7 +57,7 @@
         android:label="fragment_componen_editor"
         tools:layout="@layout/fragment_componen_editor" >
         <action
-            android:id="@+id/action_photographerEditor_to_photographerList"
+            android:id="@+id/action_componentEditor_to_componentList"
             app:destination="@id/componentList" />
     </fragment>
 

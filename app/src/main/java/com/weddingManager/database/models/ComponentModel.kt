@@ -30,7 +30,17 @@ data class ComponentModel(
 ) : Parcelable {
 
     enum class Type(val type: String) {
-        Place("place"), Photographer("photographer")
+        Place("place"), Photographer("photographer"), NaT("");
+
+        companion object {
+            fun convert(value: String): Type {
+                if (value == Place.type)
+                    return Place
+                if (value == Photographer.type)
+                    return Photographer
+                return NaT
+            }
+        }
     }
 
     override fun equals(other: Any?): Boolean {
