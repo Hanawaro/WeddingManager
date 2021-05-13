@@ -27,7 +27,7 @@ class CalendarDialog(context: Context, private val weddingModel: MutableLiveData
 
             setContentView(R.layout.layout_calendar_view)
 
-            val time = TimePicker(weddingModel.value!!.date).time
+            val time = TimePicker(weddingModel.value!!.date * 1000).time
 
             widget = findViewById<MaterialCalendarView>(R.id.show_calendar_view)?.apply {
                 if (weddingModel.value!!.date != WeddingModel.noDateValue) {
@@ -36,6 +36,7 @@ class CalendarDialog(context: Context, private val weddingModel: MutableLiveData
                 } else {
                     currentDate = TimePicker(System.currentTimeMillis()).time.asCalendarDay()
                     selectedDate = TimePicker(System.currentTimeMillis()).time.asCalendarDay()
+                    clearSelection()
                 }
 
                 state().edit().isCacheCalendarPositionEnabled(true).commit()
@@ -44,7 +45,6 @@ class CalendarDialog(context: Context, private val weddingModel: MutableLiveData
                 addDecorator(FutureDayDecorator(context))
 
                 setOnDateChangedListener(controller)
-                clearSelection()
             }
         }
     }

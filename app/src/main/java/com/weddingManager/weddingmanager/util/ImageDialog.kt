@@ -10,12 +10,14 @@ import androidx.fragment.app.DialogFragment
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingAdapter
 
-class ImageDialog() : DialogFragment() {
+open class ImageDialog() : DialogFragment() {
 
     var isFixed = false
         private set
 
     var bitmap: Bitmap? = null
+
+    var callback: (() -> Unit) = {  }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,7 @@ class ImageDialog() : DialogFragment() {
 
         view.findViewById<ImageView>(R.id.show_image_view)?.setOnClickListener {
             WeddingAdapter.isVerticallyScrolling = true
+            callback()
             dismiss()
         }
     }

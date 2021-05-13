@@ -1,23 +1,22 @@
-package com.weddingManager.weddingmanager.ui.weddingEditor.components.componentsRecycler
+package com.weddingManager.weddingmanager.ui.componentList.componentsRecycler
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.weddingManager.database.models.ComponentModel
 import com.weddingManager.database.models.WeddingModel
 
-class ComponentRecycler(context: Context, wedding: WeddingModel, fragmentManager: FragmentManager, recyclerView: RecyclerView, canScroll: MutableLiveData<Boolean>) {
+class ComponentListRecycler(context: Context, weddingModel: WeddingModel, private val type: ComponentModel.Type, fragmentManager: FragmentManager, recyclerView: RecyclerView) {
 
-    val componentAdapter = ComponentAdapter(wedding, fragmentManager, canScroll)
+    private val componentAdapter = ComponentListAdapter(weddingModel, type, fragmentManager)
 
     init {
         recyclerView.apply {
             adapter = componentAdapter
             layoutManager = object: LinearLayoutManager(context) {
                 override fun canScrollVertically(): Boolean {
-                    return false
+                    return true
                 }
             }
             setHasFixedSize(true)
@@ -25,7 +24,11 @@ class ComponentRecycler(context: Context, wedding: WeddingModel, fragmentManager
     }
 
     fun submitList(list: List<ComponentModel>) {
-        componentAdapter.submitList(list)
+        val insert = ArrayList<ComponentModel>().apply {
+            add(ComponentModel("", "", type.type, ByteArray(0)))
+            addAll(list)
+        }
+        componentAdapter.submitList(insert)
     }
 
 }

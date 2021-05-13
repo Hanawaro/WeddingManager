@@ -46,10 +46,15 @@
             app:destination="@id/componentEditor" />
         <action
             android:id="@+id/action_componentList_to_weddingEditor"
-            app:destination="@id/weddingEditor" />
+            app:destination="@id/weddingEditor"
+            app:popUpTo="@id/weddingEditor"
+            app:popUpToInclusive="true" />
         <argument
             android:name="typeName"
             app:argType="string" />
+        <argument
+            android:name="wedding"
+            app:argType="com.weddingManager.database.models.WeddingModel" />
     </fragment>
     <fragment
         android:id="@+id/componentEditor"

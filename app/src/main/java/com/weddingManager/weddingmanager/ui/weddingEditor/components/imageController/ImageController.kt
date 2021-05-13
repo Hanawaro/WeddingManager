@@ -13,18 +13,21 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
 import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.weddingmanager.util.ImageDialog
-import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingAdapter
-import com.weddingManager.weddingmanager.ui.weddingEditor.components.componentsRecycler.ComponentAdapter
 import kotlinx.android.synthetic.main.fragment_wedding_editor.*
 import java.io.ByteArrayOutputStream
 import kotlin.math.abs
 
-class ImageController(private val view: ImageView, private val resultLauncher: ActivityResultLauncher<Intent>) {
+class ImageController(private val view: ImageView, private val resultLauncher: ActivityResultLauncher<Intent>, private val canScroll: MutableLiveData<Boolean>) {
 
-    private val dialog = ImageDialog()
+    private val dialog = ImageDialog().apply {
+        callback = {
+            canScroll.postValue(true)
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     fun setListeners(wedding: WeddingModel, fragmentManager: FragmentManager) {
@@ -45,12 +48,14 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
                     y = event.rawY
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (wedding.photo.isNotEmpty() && !dialog.isFixed) {
+                    if (isLongClick && wedding.photo.isNotEmpty() && !dialog.isFixed) {
                         // close image here
                         dialog.dismiss()
                     }
 
                     // TODO implement fix scrolling (true)
+
+                    canScroll.postValue(true)
                     isLongClick = false
                 }
             }
@@ -63,6 +68,8 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
             // show image here
 
             // TODO implement fix scrolling (false)
+
+            canScroll.postValue(false)
 
             if (wedding.photo.isNotEmpty()) {
                 dialog.bitmap = BitmapFactory.decodeByteArray(wedding.photo, 0, wedding.photo.size)

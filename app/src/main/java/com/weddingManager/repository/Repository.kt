@@ -72,11 +72,9 @@ object Repository {
             return database!!.getWeddingDAO().getAll(regex).asLiveData()
         }
 
-        fun contains(context: Context, id: Int): Boolean {
+        fun getAll(context: Context, id: Int): LiveData<List<WeddingModel>> {
             database = getDatabase(context)
-            return database!!.getWeddingDAO().getAll(id).asLiveData().value?.apply {
-                isNotEmpty()
-            }.orEmpty().isNotEmpty()
+            return database!!.getWeddingDAO().getAll(id).asLiveData()
         }
 
     }
@@ -111,9 +109,14 @@ object Repository {
             }
         }
 
-        fun getAll(context: Context, type: ComponentModel.Type): LiveData<List<ComponentModel>> {
+//        fun getAll(context: Context, type: ComponentModel.Type, date: Long): LiveData<List<ComponentModel>> {
+//            database = getDatabase(context)
+//            return database!!.getComponentDAO().getAll(type.type, date)
+//        }
+
+        fun getAll(context: Context, id: Int, type: ComponentModel.Type, date: Long): LiveData<List<ComponentModel>> {
             database = getDatabase(context)
-            return database!!.getComponentDAO().getAll(type.type)
+            return database!!.getComponentDAO().getAll(id, type.type, date)
         }
 
         fun get(context: Context, id: Int): LiveData<ComponentModel> {
@@ -121,9 +124,14 @@ object Repository {
             return database!!.getComponentDAO().get(id)
         }
 
-        fun getAll(context: Context, type: String): LiveData<List<ComponentModel>> {
+//        fun getAll(context: Context, type: String, date: Long): LiveData<List<ComponentModel>> {
+//            database = getDatabase(context)
+//            return database!!.getComponentDAO().getAll(type, date)
+//        }
+
+        fun getAll(context: Context, id: Int, type: String, date: Long): LiveData<List<ComponentModel>> {
             database = getDatabase(context)
-            return database!!.getComponentDAO().getAll(type)
+            return database!!.getComponentDAO().getAll(id, type, date)
         }
 
         fun getAll(context: Context): LiveData<List<String>> {
@@ -153,6 +161,13 @@ object Repository {
             database = getDatabase(context)
             CoroutineScope(IO).launch {
                 database!!.getDateDAO().delete(date)
+            }
+        }
+
+        fun delete(context: Context, id: Int, date: Long) {
+            database = getDatabase(context)
+            CoroutineScope(IO).launch {
+                database!!.getDateDAO().delete(id, date)
             }
         }
 

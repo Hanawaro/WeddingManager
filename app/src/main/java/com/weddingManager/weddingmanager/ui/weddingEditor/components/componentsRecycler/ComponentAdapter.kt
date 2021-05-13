@@ -1,44 +1,35 @@
 package com.weddingManager.weddingmanager.ui.weddingEditor.components.componentsRecycler
 
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.BitmapFactory
-import android.opengl.Visibility
-import android.os.Vibrator
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.setMargins
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weddingManager.database.models.ComponentModel
 import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.weddingmanager.R
-import com.weddingManager.weddingmanager.ui.menu.components.weddingsRecycler.WeddingAdapter
 import com.weddingManager.weddingmanager.ui.weddingEditor.WeddingEditorDirections
 import kotlinx.android.synthetic.main.item_wedding_component.view.*
-import java.awt.font.TextAttribute
+import kotlinx.android.synthetic.main.item_wedding_component_with_title.view.*
 import kotlin.math.abs
 
-class ComponentAdapter(private val fragmentManager: FragmentManager) : ListAdapter<ComponentModel, ComponentAdapter.ComponentViewHolder>(DiffCallback()) {
+class ComponentAdapter(private val wedding: WeddingModel,private val fragmentManager: FragmentManager, private val canScroll: MutableLiveData<Boolean>) : ListAdapter<ComponentModel, ComponentAdapter.ComponentViewHolder>(DiffCallback()) {
 
     companion object {
         var isVerticallyScrolling = true
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComponentViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_wedding_component, parent, false)
-        return ComponentViewHolder(fragmentManager, itemView)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_wedding_component_with_title, parent, false)
+        return ComponentViewHolder(wedding, fragmentManager, itemView, canScroll)
     }
 
     override fun onBindViewHolder(holder: ComponentViewHolder, position: Int) {
@@ -46,8 +37,12 @@ class ComponentAdapter(private val fragmentManager: FragmentManager) : ListAdapt
         holder.bind(currentItem)
     }
 
-    class ComponentViewHolder(private val fragmentManager: FragmentManager, itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val infoDialog = InfoDialog()
+    class ComponentViewHolder(private val wedding: WeddingModel, private val fragmentManager: FragmentManager, itemView: View, private val canScroll: MutableLiveData<Boolean>) : RecyclerView.ViewHolder(itemView) {
+        private val infoDialog = InfoDialog().apply {
+            callback = {
+                canScroll.postValue(true)
+            }
+        }
 
         fun bind(component: ComponentModel) {
             itemView.apply {
@@ -94,8 +89,8 @@ class ComponentAdapter(private val fragmentManager: FragmentManager) : ListAdapt
                                 // close image here
                                 infoDialog.dismiss()
                             }
-//
-//                            WeddingAdapter.isVerticallyScrolling = true
+
+                            canScroll.postValue(true)
                             isLongClick = false
                         }
                     }
@@ -107,7 +102,7 @@ class ComponentAdapter(private val fragmentManager: FragmentManager) : ListAdapt
                     isLongClick = true
                     // show image here
 
-                    WeddingAdapter.isVerticallyScrolling = false
+                    canScroll.postValue(false)
 
                     if (component.name.isNotEmpty()) {
                         infoDialog.apply {
@@ -147,7 +142,7 @@ class ComponentAdapter(private val fragmentManager: FragmentManager) : ListAdapt
                         ).start()
                     }.start()
 
-                    val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type)
+                    val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, wedding)
                     Navigation.findNavController(itemView).navigate(action)
 
                 }

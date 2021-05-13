@@ -7,7 +7,7 @@ import com.weddingManager.database.models.DateModel
 @Dao
 interface DateDAO {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(date: DateModel)
 
     @Update
@@ -15,6 +15,9 @@ interface DateDAO {
 
     @Delete
     suspend fun delete(date: DateModel)
+
+    @Query("DELETE FROM dates WHERE id =:id AND date=:date")
+    suspend fun delete(id: Int, date: Long)
 
     @Query("SELECT * FROM dates WHERE id =:id")
     fun getAll(id: Int) : LiveData<List<DateModel>>

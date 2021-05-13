@@ -18,6 +18,8 @@ class InfoDialog : DialogFragment() {
     var isFixed = false
         private set
 
+    var callback: (() -> Unit) = {  }
+
     var bitmap: Bitmap? = null
     var name: String = ""
     var info: String = ""
@@ -60,7 +62,7 @@ class InfoDialog : DialogFragment() {
     }
 
     private fun close() {
-        // TODO set scrolling to true
+        callback()
         dismiss()
     }
 

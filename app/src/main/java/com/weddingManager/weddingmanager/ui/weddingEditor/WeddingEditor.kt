@@ -1,10 +1,6 @@
 package com.weddingManager.weddingmanager.ui.weddingEditor
 
-import android.R.attr.mimeType
-import android.app.Activity
-import android.content.ContentResolver
-import android.content.Intent
-import android.graphics.Bitmap
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -14,30 +10,23 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.animation.OvershootInterpolator
-import android.webkit.MimeTypeMap
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.weddingManager.database.models.ComponentModel
+import com.weddingManager.database.models.DateModel
 import com.weddingManager.database.models.WeddingModel
 import com.weddingManager.repository.Repository
 import com.weddingManager.weddingmanager.R
-import com.weddingManager.weddingmanager.ui.menu.MenuViewModel
 import com.weddingManager.weddingmanager.ui.weddingEditor.components.calendarDialog.CalendarDialog
 import com.weddingManager.weddingmanager.ui.weddingEditor.components.componentsRecycler.ComponentRecycler
 import com.weddingManager.weddingmanager.ui.weddingEditor.components.imageController.ImageController
 import kotlinx.android.synthetic.main.fragment_wedding_editor.*
-import kotlinx.coroutines.flow.flatMapConcat
-import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -52,6 +41,7 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
     private lateinit var imageController: ImageController
     private lateinit var calendarDialog: CalendarDialog
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,12 +73,11 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
 
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>(ComponentModel.Type.Photographer.type)?.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            viewModel.wedding.value!!.photographer = it
-        })
-
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>(ComponentModel.Type.Place.type)?.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            viewModel.wedding.value!!.place = it
+        viewModel.canScroll.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            Toast.makeText(requireContext(), (!it).toString(), Toast.LENGTH_SHORT).show()
+            wedding_editor_scroll_view.setOnTouchListener { _, _ ->
+                !it
+            }
         })
 
         // SET STATE
@@ -97,11 +86,12 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
 
         Log.d("DEBUG_WEDDING_VALUE", viewModel.wedding.value.toString())
 
+
         val register = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            viewModel.wedding.value!!.photo = imageController.callBack(requireContext(), requireView(), result) ?: ByteArray(0)
+            viewModel.wedding.value!!.photo = imageController.callBack(requireContext(), requireView(), result) ?: viewModel.wedding.value!!.photo
         }
 
-        imageController = ImageController(wedding_editor_image, register).apply {
+        imageController = ImageController(wedding_editor_image, register, viewModel.canScroll).apply {
             setListeners(viewModel.wedding.value!!, parentFragmentManager)
         }
 
@@ -116,15 +106,27 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
 
         fab_save_wedding_editor.setOnClickListener {
             if (viewModel.wedding.value!!.husbandName.isNotEmpty() && viewModel.wedding.value!!.wifeName.isNotEmpty()) {
-                if (Repository.Wedding.contains(requireContext(), viewModel.wedding.value!!.id))
-                    Repository.Wedding.update(requireContext(), viewModel.wedding.value!!)
-                else
+
+                Repository.Wedding.getAll(requireContext(), viewModel.wedding.value!!.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    if (it.isNotEmpty()) {
+                        val model = it[0]
+
+                        if (model.photographer != viewModel.wedding.value!!.photographer)
+                            Repository.Date.delete(requireContext(), model.photographer, model.date)
+                        if(viewModel.wedding.value!!.photographer != 0)
+                            Repository.Date.insert(requireContext(), DateModel(viewModel.wedding.value!!.photographer, viewModel.wedding.value!!.date))
+
+                        if (model.place != viewModel.wedding.value!!.place)
+                            Repository.Date.delete(requireContext(), model.place, model.date)
+                        if(viewModel.wedding.value!!.place != 0)
+                            Repository.Date.insert(requireContext(), DateModel(viewModel.wedding.value!!.place, viewModel.wedding.value!!.date))
+                    }
                     Repository.Wedding.insert(requireContext(), viewModel.wedding.value!!)
+                    Snackbar.make(requireView(), "Data has saved", Snackbar.LENGTH_LONG).show()
 
-                val action = WeddingEditorDirections.actionWeddingEditorToMenu()
-                findNavController().navigate(action)
-
-                Snackbar.make(requireView(), "Data has saved", Snackbar.LENGTH_LONG).show()
+                    val action = WeddingEditorDirections.actionWeddingEditorToMenu()
+                    findNavController().navigate(action)
+                })
             } else {
                 Snackbar.make(requireView(), "Fields are empty", Snackbar.LENGTH_LONG).show()
             }
@@ -150,9 +152,15 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
             }.start()
         }
 
+        // db
+
+//        Repository.Component.insert(requireContext(), ComponentModel("name 1", "info 1", "photographer", viewModel.wedding.value!!.photo))
+//        Repository.Component.insert(requireContext(), ComponentModel("name 2", "info 2", "photographer", viewModel.wedding.value!!.photo))
+//        Repository.Component.insert(requireContext(), ComponentModel("name 3", "info 3", "photographer", viewModel.wedding.value!!.photo))
+
         // set recycle view
 
-        val recycler = ComponentRecycler(requireContext(), parentFragmentManager, recycler_view_weddings_editor)
+        val recycler = ComponentRecycler(requireContext(), viewModel.wedding.value!!, parentFragmentManager, recycler_view_weddings_editor, viewModel.canScroll)
 
         val componentsList = ArrayList<ComponentModel>().apply {
             add(ComponentModel("", "", ComponentModel.Type.Photographer.type, ByteArray(0)))

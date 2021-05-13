@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:foreground="#00000000">
+
+    <TextView
+        android:id="@+id/wedding_component_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textAlignment="center"
+        android:text="title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <include layout="@layout/item_wedding_component"
+        android:layout_below="@id/wedding_component_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+</RelativeLayout>
