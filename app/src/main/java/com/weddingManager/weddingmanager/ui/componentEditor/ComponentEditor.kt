@@ -21,7 +21,6 @@ class ComponentEditor : Fragment(R.layout.fragment_componen_editor) {
 
         setHasOptionsMenu(true)
 
-        var id: Int = 0
         activity?.title = when(ComponentModel.Type.convert(args.type)) {
             ComponentModel.Type.Place -> "Место"
             ComponentModel.Type.Photographer -> "Фотограф"
