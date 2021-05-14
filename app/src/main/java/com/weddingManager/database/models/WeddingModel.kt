@@ -42,7 +42,7 @@ data class WeddingModel(
 ) : Parcelable {
 
     companion object {
-        val noDateValue = Long.MAX_VALUE / 1000
+        const val noDateValue = Long.MAX_VALUE / 1000
     }
 
     override fun equals(other: Any?): Boolean {

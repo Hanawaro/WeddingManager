@@ -74,7 +74,6 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
         })
 
         viewModel.canScroll.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            Toast.makeText(requireContext(), (!it).toString(), Toast.LENGTH_SHORT).show()
             wedding_editor_scroll_view.setOnTouchListener { _, _ ->
                 !it
             }

@@ -9,19 +9,26 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weddingManager.database.models.ComponentModel
 import com.weddingManager.database.models.WeddingModel
+import com.weddingManager.repository.Repository
 import com.weddingManager.weddingmanager.R
 import com.weddingManager.weddingmanager.ui.weddingEditor.WeddingEditorDirections
 import kotlinx.android.synthetic.main.item_wedding_component.view.*
 import kotlinx.android.synthetic.main.item_wedding_component_with_title.view.*
 import kotlin.math.abs
 
-class ComponentAdapter(private val wedding: WeddingModel,private val fragmentManager: FragmentManager, private val canScroll: MutableLiveData<Boolean>) : ListAdapter<ComponentModel, ComponentAdapter.ComponentViewHolder>(DiffCallback()) {
+class ComponentAdapter(
+        private val wedding: WeddingModel,
+        private val fragmentManager: FragmentManager,
+        private val canScroll: MutableLiveData<Boolean>
+
+        ) : ListAdapter<ComponentModel, ComponentAdapter.ComponentViewHolder>(DiffCallback()) {
 
     companion object {
         var isVerticallyScrolling = true
@@ -29,7 +36,7 @@ class ComponentAdapter(private val wedding: WeddingModel,private val fragmentMan
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComponentViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_wedding_component_with_title, parent, false)
-        return ComponentViewHolder(wedding, fragmentManager, itemView, canScroll)
+        return ComponentViewHolder(wedding, fragmentManager, canScroll, itemView)
     }
 
     override fun onBindViewHolder(holder: ComponentViewHolder, position: Int) {
@@ -37,7 +44,14 @@ class ComponentAdapter(private val wedding: WeddingModel,private val fragmentMan
         holder.bind(currentItem)
     }
 
-    class ComponentViewHolder(private val wedding: WeddingModel, private val fragmentManager: FragmentManager, itemView: View, private val canScroll: MutableLiveData<Boolean>) : RecyclerView.ViewHolder(itemView) {
+    class ComponentViewHolder(
+            private val wedding: WeddingModel,
+            private val fragmentManager: FragmentManager,
+            private val canScroll: MutableLiveData<Boolean>,
+            itemView: View
+
+            ) : RecyclerView.ViewHolder(itemView) {
+
         private val infoDialog = InfoDialog().apply {
             callback = {
                 canScroll.postValue(true)
@@ -132,7 +146,7 @@ class ComponentAdapter(private val wedding: WeddingModel,private val fragmentMan
 
                 }
 
-                wedding_component_container.setOnClickListener {
+                wedding_component_container.setOnClickListener { it ->
                     val duration = 300L
                     val scale = 1.1f
 
@@ -142,8 +156,15 @@ class ComponentAdapter(private val wedding: WeddingModel,private val fragmentMan
                         ).start()
                     }.start()
 
-                    val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, wedding)
-                    Navigation.findNavController(itemView).navigate(action)
+                    Repository.Wedding.getAll(context, wedding.id).observe(wedding_component_container.findViewTreeLifecycleOwner()!!, androidx.lifecycle.Observer { list ->
+                        list.first().apply {
+                            husbandName = wedding.husbandName
+                            wifeName = wedding.wifeName
+                            date = wedding.date
+                        }
+                        val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, list.first())
+                        Navigation.findNavController(itemView).navigate(action)
+                    })
 
                 }
 
