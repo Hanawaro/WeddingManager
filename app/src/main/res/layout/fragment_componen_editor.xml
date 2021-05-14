@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.ComponentEditor">
+    tools:context=".ui.componentEditor.ComponentEditor">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/component_info_root"
+        android:id="@+id/component_editor_info_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -16,23 +16,21 @@
         android:clickable="true"
         android:paddingTop="0dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:backgroundTint="#ffffff"
-        android:background="#ffffff">
+        android:paddingRight="20dp" >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/component_info_image"
+            android:id="@+id/component_editor_info_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:src="@drawable/profile"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/component_info_name"
+            app:layout_constraintBottom_toTopOf="@id/component_editor_info_name"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <EditText
-            android:id="@+id/component_info_name"
+            android:id="@+id/component_editor_info_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -44,21 +42,21 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/component_info_image" />
+            app:layout_constraintTop_toBottomOf="@id/component_editor_info_image" />
 
         <ScrollView
-            android:id="@+id/component_info_content_wrapper"
+            android:id="@+id/component_editor_info_content_wrapper"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
 
-            app:layout_constraintTop_toBottomOf="@id/component_info_name"
+            app:layout_constraintTop_toBottomOf="@id/component_editor_info_name"
             android:clipToPadding="false">
 
             <EditText
-                android:id="@+id/component_info_content"
+                android:id="@+id/component_editor_info_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
@@ -72,7 +70,7 @@
         </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_wedding"
+            android:id="@+id/fab_save_component"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"

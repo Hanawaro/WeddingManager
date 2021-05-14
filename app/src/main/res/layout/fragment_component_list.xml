@@ -12,7 +12,7 @@
         tools:listitem="@layout/item_wedding_component"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_wedding"
+        android:id="@+id/fab_add_component"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

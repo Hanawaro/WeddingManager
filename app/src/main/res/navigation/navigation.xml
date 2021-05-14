@@ -58,12 +58,19 @@
     </fragment>
     <fragment
         android:id="@+id/componentEditor"
-        android:name="com.weddingManager.weddingmanager.ui.fragments.ComponentEditor"
+        android:name="com.weddingManager.weddingmanager.ui.componentEditor.ComponentEditor"
         android:label="fragment_componen_editor"
         tools:layout="@layout/fragment_componen_editor" >
         <action
             android:id="@+id/action_componentEditor_to_componentList"
             app:destination="@id/componentList" />
+        <argument
+            android:name="component"
+            app:argType="com.weddingManager.database.models.ComponentModel"
+            app:nullable="true" />
+        <argument
+            android:name="type"
+            app:argType="string" />
     </fragment>
 
 </navigation>

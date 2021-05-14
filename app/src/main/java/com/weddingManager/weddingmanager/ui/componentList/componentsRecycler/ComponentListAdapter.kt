@@ -57,6 +57,13 @@ class ComponentListAdapter(private val weddingModel: WeddingModel, private val t
                     wedding_component_image.layoutParams.height = wedding_component_image.layoutParams.width
                 }
 
+                wedding_component_container.setOnLongClickListener {
+                    val action = ComponentListDirections.actionComponentListToComponentEditor(component, type.type)
+                    Navigation.findNavController(itemView).navigate(action)
+
+                    return@setOnLongClickListener true
+                }
+
                 wedding_component_container.setOnClickListener {
                     val duration = 300L
                     val scale = 1.1f
