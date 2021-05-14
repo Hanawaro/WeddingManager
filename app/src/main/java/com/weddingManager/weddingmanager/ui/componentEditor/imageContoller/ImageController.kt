@@ -1,4 +1,4 @@
-package com.weddingManager.weddingmanager.ui.weddingEditor.components.imageController
+package com.weddingManager.weddingmanager.ui.componentEditor.imageContoller
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,24 +13,18 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
-import com.weddingManager.database.models.WeddingModel
+import com.weddingManager.database.models.ComponentModel
 import com.weddingManager.weddingmanager.util.ImageDialog
-import kotlinx.android.synthetic.main.fragment_wedding_editor.*
 import java.io.ByteArrayOutputStream
-import kotlin.math.abs
+import java.lang.Math.abs
 
-class ImageController(private val view: ImageView, private val resultLauncher: ActivityResultLauncher<Intent>, private val canScroll: MutableLiveData<Boolean>) {
+class ImageController(private val view: ImageView, private val resultLauncher: ActivityResultLauncher<Intent>) {
 
-    private val dialog = ImageDialog().apply {
-        callback = {
-            canScroll.postValue(true)
-        }
-    }
+    private val dialog = ImageDialog()
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setListeners(wedding: WeddingModel, fragmentManager: FragmentManager) {
+    fun setListeners(component: ComponentModel, fragmentManager: FragmentManager) {
 
         var isLongClick = false
         var x = 0f
@@ -48,14 +42,11 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
                     y = event.rawY
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (isLongClick && wedding.photo.isNotEmpty() && !dialog.isFixed) {
+                    if (isLongClick && component.photo.isNotEmpty() && !dialog.isFixed) {
                         // close image here
                         dialog.dismiss()
                     }
 
-                    // TODO implement fix scrolling (true)
-
-                    canScroll.postValue(true)
                     isLongClick = false
                 }
             }
@@ -67,12 +58,8 @@ class ImageController(private val view: ImageView, private val resultLauncher: A
             isLongClick = true
             // show image here
 
-            // TODO implement fix scrolling (false)
-
-            canScroll.postValue(false)
-
-            if (wedding.photo.isNotEmpty()) {
-                dialog.bitmap = BitmapFactory.decodeByteArray(wedding.photo, 0, wedding.photo.size)
+            if (component.photo.isNotEmpty()) {
+                dialog.bitmap = BitmapFactory.decodeByteArray(component.photo, 0, component.photo.size)
                 dialog.show(fragmentManager, "")
             } else {
                 val timeAnimation = 300L

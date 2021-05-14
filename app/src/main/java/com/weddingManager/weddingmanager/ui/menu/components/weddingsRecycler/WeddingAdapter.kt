@@ -47,12 +47,9 @@ class WeddingAdapter(private val vibrator: Vibrator?, private val fragmentManage
                 item_wife_name.text = wedding.wifeName
 
                 if (wedding.date == WeddingModel.noDateValue) {
-                    item_date.text = "дата не выбрана"
+                    item_date.text = "не выбрана"
                 } else {
-                    val text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(wedding.date * 1000)) +
-                            " | ${wedding.date.toString()}" +
-                            ""
-                    item_date.text = text
+                    item_date.setText(SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(wedding.date * 1000)))
                 }
 
                 val calendar = Calendar.getInstance().apply {

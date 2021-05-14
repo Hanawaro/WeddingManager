@@ -95,6 +95,11 @@ object Repository {
             }
         }
 
+        fun isValid(context: Context, componentName: String, componentID: Int, date: Long): LiveData<List<WeddingModel>> {
+            database = getDatabase(context)
+            return database!!.getComponentDAO().isValid(componentName + "ID", componentID, date)
+        }
+
         fun delete(context: Context, component: ComponentModel) {
             database = getDatabase(context)
             CoroutineScope(IO).launch {

@@ -49,7 +49,7 @@ class CalendarBottomSheet(context: Context, searchQuery: MutableStateFlow<MenuVi
             }
         }
         val bottomSheet = dialog.findViewById<FrameLayout>(R.id.design_bottom_sheet)
-        val behavior = BottomSheetBehavior.from(bottomSheet)
+        val behavior = BottomSheetBehavior.from(bottomSheet!!)
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING)

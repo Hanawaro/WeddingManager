@@ -10,6 +10,7 @@
         android:id="@+id/recycler_view_weddings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/app_back"
         tools:listitem="@layout/item_wedding"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,8 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_add"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/button_color"
         android:layout_margin="15dp"/>
-
-
 
 </FrameLayout>

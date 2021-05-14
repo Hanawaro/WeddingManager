@@ -32,8 +32,8 @@ class WeddingRecycler(context: Context, fragmentManager: FragmentManager, recycl
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val deleting = weddingAdapter.currentList[viewHolder.adapterPosition]
                 Repository.Wedding.delete(context, deleting)
-                Snackbar.make(recyclerView, "Restore wedding",
-                    Snackbar.LENGTH_LONG).setAction("back", View.OnClickListener {
+                Snackbar.make(recyclerView, "Восстановить свадьбу",
+                    Snackbar.LENGTH_LONG).setAction("назад", View.OnClickListener {
                         Repository.Wedding.insert(context, deleting)
                     }).show()
             }

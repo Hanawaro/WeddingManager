@@ -12,16 +12,16 @@ import kotlinx.android.parcel.Parcelize
 data class ComponentModel(
 
     @ColumnInfo(name = "name")
-    val name: String,
+    var name: String,
 
     @ColumnInfo(name = "info")
-    val info: String,
+    var info: String,
 
     @ColumnInfo(name = "componentType")
     val type: String,
 
     @ColumnInfo(name = "photo", typeAffinity = ColumnInfo.BLOB)
-    val photo: ByteArray,
+    var photo: ByteArray,
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -16,7 +16,7 @@ interface DateDAO {
     @Delete
     suspend fun delete(date: DateModel)
 
-    @Query("DELETE FROM dates WHERE id =:id AND date=:date")
+    @Query("DELETE FROM dates WHERE componentID =:id AND date=:date")
     suspend fun delete(id: Int, date: Long)
 
     @Query("SELECT * FROM dates WHERE id =:id")

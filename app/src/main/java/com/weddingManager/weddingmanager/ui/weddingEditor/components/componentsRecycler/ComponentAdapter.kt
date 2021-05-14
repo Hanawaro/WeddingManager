@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -60,7 +61,11 @@ class ComponentAdapter(
 
         fun bind(component: ComponentModel) {
             itemView.apply {
-                wedding_component_title.text = component.type
+                wedding_component_title.text = when(ComponentModel.Type.convert(component.type)) {
+                    ComponentModel.Type.Place -> "Место проведения"
+                    ComponentModel.Type.Photographer -> "Ваш фотограф"
+                    ComponentModel.Type.NaT -> ""
+                }
                 if (component.name.isEmpty()) {
                     wedding_component_name.visibility = View.INVISIBLE
                     wedding_component_image.visibility = View.INVISIBLE
@@ -156,15 +161,36 @@ class ComponentAdapter(
                         ).start()
                     }.start()
 
-                    Repository.Wedding.getAll(context, wedding.id).observe(wedding_component_container.findViewTreeLifecycleOwner()!!, androidx.lifecycle.Observer { list ->
-                        list.first().apply {
-                            husbandName = wedding.husbandName
-                            wifeName = wedding.wifeName
-                            date = wedding.date
-                        }
-                        val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, list.first())
+                    if (wedding.date == WeddingModel.noDateValue) {
+                        Toast.makeText(context, "Задайте дату", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    if (wedding.id != 0) {
+                        Repository.Wedding.getAll(context, wedding.id).observe(wedding_component_container.findViewTreeLifecycleOwner()!!, androidx.lifecycle.Observer { list ->
+                            list.first().apply {
+                                husbandName = wedding.husbandName
+                                wifeName = wedding.wifeName
+                                date = wedding.date
+                                photo = wedding.photo
+                                when (ComponentModel.Type.convert(component.type)) {
+                                    ComponentModel.Type.Place -> {
+                                        photographer = wedding.photographer
+                                    }
+                                    ComponentModel.Type.Photographer -> {
+                                        place = wedding.place
+                                    }
+                                    ComponentModel.Type.NaT -> {
+                                    }
+                                }
+                            }
+                            val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, list.first())
+                            Navigation.findNavController(itemView).navigate(action)
+                        })
+                    } else {
+                        val action = WeddingEditorDirections.actionWeddingEditorToComponentList(component.type, wedding)
                         Navigation.findNavController(itemView).navigate(action)
-                    })
+                    }
 
                 }
 

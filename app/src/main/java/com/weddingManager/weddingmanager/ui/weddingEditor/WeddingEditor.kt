@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -50,26 +51,26 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(WeddingEditorViewModel::class.java)
 
-        viewModel.wedding.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            wedding_editor_husband.setText(it.husbandName)
-            wedding_editor_wife.setText(it.wifeName)
+        viewModel.wedding.observe(viewLifecycleOwner, androidx.lifecycle.Observer { wedding ->
+            wedding_editor_husband.setText(wedding.husbandName)
+            wedding_editor_wife.setText(wedding.wifeName)
 
-            if (it.photo.isEmpty()) {
+            if (wedding.photo.isEmpty()) {
                 wedding_editor_image.setImageDrawable(ColorDrawable(Color.WHITE))
             } else {
                 wedding_editor_image.setImageBitmap(
                         BitmapFactory.decodeByteArray(
-                                it.photo,
+                                wedding.photo,
                                 0,
-                                it.photo.size
+                                wedding.photo.size
                         )
                 )
             }
 
-            if (it.date == WeddingModel.noDateValue)
+            if (wedding.date == WeddingModel.noDateValue)
                 wedding_editor_date.text = "дата не установлена"
             else
-                wedding_editor_date.text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(it.date * 1000))
+                wedding_editor_date.text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(wedding.date * 1000))
 
         })
 
@@ -107,27 +108,26 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
             if (viewModel.wedding.value!!.husbandName.isNotEmpty() && viewModel.wedding.value!!.wifeName.isNotEmpty()) {
 
                 Repository.Wedding.getAll(requireContext(), viewModel.wedding.value!!.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+
                     if (it.isNotEmpty()) {
                         val model = it[0]
 
-                        if (model.photographer != viewModel.wedding.value!!.photographer)
-                            Repository.Date.delete(requireContext(), model.photographer, model.date)
-                        if(viewModel.wedding.value!!.photographer != 0)
-                            Repository.Date.insert(requireContext(), DateModel(viewModel.wedding.value!!.photographer, viewModel.wedding.value!!.date))
-
-                        if (model.place != viewModel.wedding.value!!.place)
-                            Repository.Date.delete(requireContext(), model.place, model.date)
+                        Repository.Date.delete(requireContext(), model.place, model.date)
                         if(viewModel.wedding.value!!.place != 0)
                             Repository.Date.insert(requireContext(), DateModel(viewModel.wedding.value!!.place, viewModel.wedding.value!!.date))
+
+                        Repository.Date.delete(requireContext(), model.photographer, model.date)
+                        if(viewModel.wedding.value!!.photographer != 0)
+                            Repository.Date.insert(requireContext(), DateModel(viewModel.wedding.value!!.photographer, viewModel.wedding.value!!.date))
                     }
                     Repository.Wedding.insert(requireContext(), viewModel.wedding.value!!)
-                    Snackbar.make(requireView(), "Data has saved", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(requireView(), "Свадба сохранена", Snackbar.LENGTH_LONG).show()
 
                     val action = WeddingEditorDirections.actionWeddingEditorToMenu()
                     findNavController().navigate(action)
                 })
             } else {
-                Snackbar.make(requireView(), "Fields are empty", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(requireView(), "Есть пустые поля", Snackbar.LENGTH_LONG).show()
             }
         }
 
@@ -177,7 +177,7 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
                     Repository.Component.get(requireContext(), id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                         componentsList[0] = it
                         recycler.submitList(componentsList)
-                        recycler.componentAdapter.notifyDataSetChanged()
+                        recycler.componentAdapter.notifyItemChanged(0)
                     })
                 }
             }
@@ -189,7 +189,7 @@ class WeddingEditor : Fragment(R.layout.fragment_wedding_editor) {
                     Repository.Component.get(requireContext(), id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                         componentsList[1] = it
                         recycler.submitList(componentsList)
-                        recycler.componentAdapter.notifyDataSetChanged()
+                        recycler.componentAdapter.notifyItemChanged(1)
                     })
                 }
             }

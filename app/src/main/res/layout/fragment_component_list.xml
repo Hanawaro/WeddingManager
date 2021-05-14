@@ -3,19 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.componentList.ComponentList">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.componentList.ComponentList"
+    android:background="@drawable/app_back">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_components_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_wedding_component"/>
+        tools:listitem="@layout/item_wedding_component" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_component"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_add"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/button_color"
         android:layout_margin="15dp"/>
 
 
